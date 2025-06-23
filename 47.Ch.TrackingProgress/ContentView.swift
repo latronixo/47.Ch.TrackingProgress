@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct TypeActivity: Identifiable {
+struct ActivityItem: Identifiable {
     let id = UUID()
     let name: String
     let count: Int
@@ -16,24 +16,30 @@ struct TypeActivity: Identifiable {
 @Observable
 class Activities: Identifiable {
     var id = UUID()
-    var type: [TypeActivity]
+    var items: [ActivityItem]
     
-    init(type: [TypeActivity]) {
-        self.type = type
+    init() {
+        items = []
+        loadItems()
+    }
+    
+    private func loadItems() {
+        items = [
+            ActivityItem(name: "DaysSwifUIHudson", count: 47),
+            ActivityItem(name: "Подтягивания", count: 5),
+            ActivityItem(name: "Соло на клавиатуре", count: 3),
+        ]
     }
 }
 
 struct ContentView: View {
-    @State private var activities = Activities (type: [
-        TypeActivity(name: "DaysSwifUIHudson", count: 47),
-        TypeActivity(name: "Подтягивания", count: 5),
-        TypeActivity(name: "Соло на клавиатуре", count: 3),
-    ])
+    @State private var activities = Activities ()
+    @State private var showingAddActivity = false
     
     var body: some View {
         NavigationStack {
             List {
-                ForEach(activities.type) { activity in
+                ForEach(activities.items) { activity in
                     HStack {
                         Text(activity.name)
                             .font(.headline)
@@ -44,7 +50,15 @@ struct ContentView: View {
                     }
                 }
             }
-            .navigationTitle("Activities")
+            .navigationTitle("Активности")
+            .toolbar {
+                Button("Добавить активность", systemImage: "plus") {
+                    showingAddActivity.toggle()
+                }
+                .sheet(isPresented: $showingAddActivity) {
+                    AddActivityView(activities: activities)
+                }
+            }
         }
     }
 }
