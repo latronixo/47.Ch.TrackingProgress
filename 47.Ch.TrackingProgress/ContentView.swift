@@ -7,15 +7,45 @@
 
 import SwiftUI
 
+struct TypeActivity: Identifiable {
+    let id = UUID()
+    let name: String
+    let count: Int
+}
+
+@Observable
+class Activities: Identifiable {
+    var id = UUID()
+    var type: [TypeActivity]
+    
+    init(type: [TypeActivity]) {
+        self.type = type
+    }
+}
+
 struct ContentView: View {
+    @State private var activities = Activities (type: [
+        TypeActivity(name: "DaysSwifUIHudson", count: 47),
+        TypeActivity(name: "Подтягивания", count: 5),
+        TypeActivity(name: "Соло на клавиатуре", count: 3),
+    ])
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        NavigationStack {
+            List {
+                ForEach(activities.type) { activity in
+                    HStack {
+                        Text(activity.name)
+                            .font(.headline)
+                        Spacer()
+                        Text("Количество: \(activity.count)")
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+            }
+            .navigationTitle("Activities")
         }
-        .padding()
     }
 }
 
