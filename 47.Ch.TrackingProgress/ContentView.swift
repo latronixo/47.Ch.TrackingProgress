@@ -10,6 +10,7 @@ import SwiftUI
 struct ActivityItem: Identifiable {
     let id = UUID()
     let name: String
+    let description: String
     let count: Int
 }
 
@@ -25,9 +26,9 @@ class Activities: Identifiable {
     
     private func loadItems() {
         items = [
-            ActivityItem(name: "DaysSwifUIHudson", count: 47),
-            ActivityItem(name: "Подтягивания", count: 5),
-            ActivityItem(name: "Соло на клавиатуре", count: 3),
+            ActivityItem(name: "DaysSwifUIHudson", description: "учеба", count: 47),
+            ActivityItem(name: "Подтягивания", description: "спорт", count: 5),
+            ActivityItem(name: "Соло на клавиатуре", description: "совершенствуюсь", count: 3),
         ]
     }
 }
