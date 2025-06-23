@@ -35,7 +35,7 @@ struct ContentView: View {
                     showingAddActivity.toggle()
                 }
                 .sheet(isPresented: $showingAddActivity) {
-                    AddActivityView(activities: activities)
+                    AddView(activities: activities)
                 }
             }
         }

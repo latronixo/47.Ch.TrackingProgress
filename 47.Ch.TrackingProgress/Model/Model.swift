@@ -7,28 +7,35 @@
 
 import Foundation
 
-struct ActivityItem: Equatable, Identifiable {
-    let id = UUID()
-    let name: String
-    let description: String
-    let count: Int
+struct ActivityItem: Equatable, Identifiable, Codable {
+    var id = UUID()
+    var name: String
+    var description: String
+    var count: Int
 }
 
 @Observable
 class Activities: Identifiable {
-    var id = UUID()
-    var items: [ActivityItem]
+    var items = [ActivityItem]() {
+        didSet {
+            saveItems()
+        }
+    }
     
     init() {
-        items = []
         loadItems()
     }
     
     private func loadItems() {
-        items = [
-            ActivityItem(name: "DaysSwifUIHudson", description: "учеба", count: 47),
-            ActivityItem(name: "Подтягивания", description: "спорт", count: 5),
-            ActivityItem(name: "Соло на клавиатуре", description: "совершенствуюсь", count: 3),
-        ]
+        if let savedItems = UserDefaults.standard.data(forKey: "Activities"),
+            let decodedItems = try? JSONDecoder().decode([ActivityItem].self, from: savedItems) {
+            items = decodedItems
+        }
+    }
+    
+    private func saveItems() {
+        if let encodedItems = try? JSONEncoder().encode(items) {
+            UserDefaults.standard.set(encodedItems, forKey: "Activities")
+        }
     }
 }
