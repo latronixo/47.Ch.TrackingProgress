@@ -7,12 +7,13 @@
 
 import SwiftUI
 
-struct ActivityDetail: View {
-    @State var name: String
-    @State var description: String
-    @State var count: Int
+struct DetailView: View {
+    @State var name = ""
+    @State var description = ""
+    @State var count = 0
     
-    var activities: Activities
+    @Binding var activities: Activities
+    @Environment(\.dismiss) var dismiss
     
     var body: some View {
         NavigationStack{
@@ -33,9 +34,13 @@ struct ActivityDetail: View {
             ToolbarItem(placement: .topBarTrailing) {
                 Button("Сохранить") {
                     let activity = ActivityItem(name: name, description: description, count: count)
-                    if let index = activities.items.firstIndex(of: activity) {
+                    if let index = activities.items.firstIndex(where: {$0.name == activity.name }) {
                         activities.items[index] = activity
+                        print("сохранено")
+                    } else {
+                        print("не сохранено")
                     }
+                    dismiss()
                 }
             }
         }
@@ -43,6 +48,15 @@ struct ActivityDetail: View {
 }
 
 #Preview {
-    //let activity = ActivityItem(name: name, description: description, count: count)
-    ActivityDetail(name: "S", description: "S", count: 5, activities: Activities())
+    struct PreviewWrapper: View {
+        @State private var activities = Activities()
+        
+        var body: some View {
+            DetailView(
+                activities: $activities
+            )
+        }
+    }
+    
+    return PreviewWrapper()
 }

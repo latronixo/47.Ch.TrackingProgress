@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct AddActivityView: View {
+struct AddView: View {
     @Environment(\.dismiss) var dismiss
     
     @State private var name = ""
@@ -53,5 +53,5 @@ struct AddActivityView: View {
 }
 
 #Preview {
-    AddActivityView(activities: Activities())
+    AddView(activities: Activities())
 }
